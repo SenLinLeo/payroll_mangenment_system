@@ -1,0 +1,603 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>员工信息维护</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script type="text/javascript" src="/static/js/common.js"></script>
+    <link rel="stylesheet" href="/static/style/admin.css" media="all">
+
+    <style>
+        /*        body {
+                  margin: 10px;
+              }
+
+            .layui-btn {
+                  height: 38px;
+                  line-height: 38px;
+                  padding: 0 48px;
+              }
+         */
+        .layui-fluid {
+            padding: 1px;
+        }
+        .layui-col-xs6 {
+            width: 14.2%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">常用操作</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel layadmin-carousel layadmin-shortcut">
+                        <div carousel-item>
+                            <ul class="layui-row layui-col-space10">
+
+                                <li class="layui-col-xs3 ">
+                                    <a lay-href="">
+                                        <i class="layui-icon  layui-btn layui-icon-template-1"
+                                           id="uploadNewEmployeesID"></i>
+                                        <cite>批量导入新员工</cite>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-xs3">
+                                    <a lay-href="">
+                                        <i class="layui-icon layui-icon-user" id="batchImportHistoryEmpID"></i>
+                                        <cite>批量导入历史员工</cite>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-xs3 ">
+                                    <a lay-href="component/layer/list.html">
+                                        <i class="layui-icon  layui-btn layui-icon-template-1"
+                                           id="batchAdjustPositionID"></i>
+                                        <cite>批量调岗</cite>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-xs3 ">
+                                    <a lay-href="component/layer/list.html">
+                                        <i class="layui-icon  layui-btn layui-icon-template-1"
+                                           id="batchAdjustSalaryID"></i>
+                                        <cite>批量调薪</cite>
+                                    </a>
+                                </li>
+
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/system/website.html">
+                                        <i class="layui-icon layui-icon-set" id="batchQuitID"></i>
+                                        <cite>批量离职</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a lay-href="set/user/info.html">
+                                        <i class="layui-icon layui-icon-set" id="batchBecomeMembersID"></i>
+                                        <cite>批量转正</cite>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs3">
+                                    <a href="/static/template/downNewEmployeesTemp.xlsx" onclick="">
+                                        <i class="layui-icon layui-icon-survey" id="downNewEmployeesTempID"></i>
+                                        <cite>导入模板下载</cite>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-header">汇总统计</div>
+                <div class="layui-card-body">
+
+                    <div class="layui-carousel layadmin-carousel layadmin-backlog">
+                        <div carousel-item>
+                            <ul class="layui-row layui-col-space10">
+                                <li class="layui-col-xs6">
+                                    <a lay-href="" class="layadmin-backlog-body">
+                                        <h3>在职</h3>
+                                        <p><cite>{{.OnTheJob}}</cite></p>
+                                    </a>
+
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="" class="layadmin-backlog-body">
+                                        <h3>离职</h3>
+                                        <p><cite>{{.LeaveJob}}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a lay-href="template/goodslist.html" class="layadmin-backlog-body">
+                                        <h3>入职</h3>
+                                        <p><cite id="1">{{.GetIn}}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});"
+                                       class="layadmin-backlog-body">
+                                        <h3>转正</h3>
+                                        <p><cite>{{.ChangeFormal}}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});"
+                                       class="layadmin-backlog-body">
+                                        <h3>调薪</h3>
+                                        <p><cite>{{.ChangeSalary}}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});"
+                                       class="layadmin-backlog-body">
+                                        <h3>调岗</h3>
+                                        <p><cite>{{.ChangeJob}}</cite></p>
+                                    </a>
+                                </li>
+                                <li class="layui-col-xs6">
+                                    <a href="javascript:;" onclick="layer.tips('不跳转', this, {tips: 3});"
+                                       class="layadmin-backlog-body">
+                                        <h3>待入职</h3>
+                                        <p><cite>{{.WaitForJob}}</cite></p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title">
+            <!-- 默认选择当月 -->
+            <li class="layui-this">当月</li>
+            <li>上月</li>
+            <li>历史月份</li>
+        </ul>
+        <br> <br>
+        <form class="layui-form layui-form-pane" action="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">搜索项</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="condition" autocomplete="off" placeholder="姓名、手机号、工号搜索" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="department"  placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+
+                <label class="layui-form-label">转正状态</label>
+                <div class="layui-input-inline">
+                    <select name="state">
+                        <!--   1-已转正 2-未转正 -->
+                        <option value="">请选择</option>
+                        <option value="1">未转正</option>
+                        <option value="2">已转正</option>
+                    </select>
+                </div>
+
+                <!--   1-实习 2-试用 3-正式 4-外国人 5-劳务 6-顾问 -->
+                <label class="layui-form-label">聘用形式</label>
+                <div class="layui-input-inline">
+                    <select name="employmentMode">
+                        <option value="">请选择</option>
+                        <option value="1">实习</option>
+                        <option value="2">试用</option>
+                        <option value="3">正式</option>
+                        <option value="4">外国人</option>
+                        <option value="5">劳务</option>
+                        <option value="6">顾问</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="layui-btn layui-btn-normal" lay-submit="" lay-filter="conditionFilter">搜索
+                </button>
+            </div>
+
+        </form>
+
+        <div class="layui-tab-content">
+            <!-- 当月 -->
+            <div class="layui-tab-item layui-show">
+                <table class="layui-hide" id="duringMonthID" lay-filter="tableFilter"></table>
+            </div>
+
+            <!-- 上月 -->
+            <div class="layui-tab-item">
+                <table class="layui-hide" id="lastMonthID" lay-filter="tableFilter"></table>
+            </div>
+
+            <!-- 历史月份 -->
+            <div class="layui-tab-item">
+                <table class="layui-hide" id="historyMonthID" lay-filter="tableFilter"></table>
+            </div>
+            <script type="text/html" id="tableBarID">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">详情</a>
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+
+        </div>
+    </div>
+
+    <script src="/static/layui/layui.js?t=1"></script>
+    <script>
+
+        layui.config({
+            base: '/static/' //静态资源所在路径
+        }).extend({
+            index: 'lib/index' //主入口模块
+        }).use(['index', 'console']);
+
+        layui.use(['form', 'element', 'upload', 'table'], function () {
+            var form      = layui.form
+                    , $       = layui.jquery
+                    , element = layui.element
+                    , table   = layui.table
+                    , laypage = layui.laypage
+                    , upload  = layui.upload;
+
+
+            var $ = layui.$, active = {
+                reload: function () {
+                    var demoReload = $('#tableReload');
+
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        , where: {
+                            key: {
+                                id: demoReload.val()
+                            }
+                        }
+                    }, 'data');
+                }
+            };
+
+            /** 1. 批量导入新员工  **/
+            upload.render({
+                elem: '#uploadNewEmployeesID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "new"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+            /** 2. 批量离职  **/
+            upload.render({
+                elem: '#batchQuitID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "leave"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+            /** 3. 批量调薪  **/
+            upload.render({
+                elem: '#batchAdjustSalaryID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "changeSalary"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+            /** 4. 批量调岗  **/
+            upload.render({
+                elem: '#batchAdjustPositionID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "changeJob"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+            /** 5. 批量转正  **/
+            upload.render({
+                elem: '#batchBecomeMembersID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "changeFormal"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+
+            /** 6. 批量导入历史员工  **/
+            upload.render({
+                elem: '#batchImportHistoryEmpID' //绑定元素
+                , url: '/employee/upload' //上传接口
+                , exts: 'xls|xlsx'
+                , data: {
+                    uploadtype : "history"
+                }
+                , done: function (res) {
+                    layer.msg('上传成功');
+                }
+                , error: function () {
+                    layer.msg('请求异常回调');
+                }
+            });
+
+            $(document).on("click", ".layui-this", function(e){
+                console.log("click");
+                console.log(e);
+            });
+
+            /** 当月  **/
+            table.render({
+                elem: '#duringMonthID'
+                ,url: '/employee/list?month=during' //数据接口
+                ,title: '用户表'
+                ,id: 'tableOne'
+                ,page: true         // 开启分页
+                ,toolbar: 'default' // 开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                ,cols: [[ //表头
+                    { type:  'checkbox',          fixed: 'left' }
+                    ,{ field: 'WorkerName',        title: '姓名' }
+                    ,{ field: 'WorkerNo',          title: '工号',        sort: true }
+                    ,{ field: 'Mobile',            title: '手机号码',    sort: true }
+                    ,{ field: 'Sex',               title: '性别',        sort: true }
+                    ,{ field: 'EmployeeType',      title: '聘用形式',    }
+                    ,{ field: 'Department',        title: '部门' }
+                    ,{ field: 'Jobs',              title: '岗位' }
+                    ,{ field: 'GetInDate',         title: '入职日期' }
+                    ,{ field: 'WorkStatus',        title: '在职状态',     templet:  function(d) {
+                            if ( "在职" === d.WorkStatus ) {
+                                return "<span style=\"color: #33CC00;\">在职</span>";
+
+                            }  else {
+                                return "<span style=\"color: #FF0000;\">d.WorkStatus</span>";
+                            }
+                        } }
+                    ,{ field: 'IsRegularEmployee', title: '转正状态'}
+                    ,{ field: 'PayMonth',          title: '发薪月数' }
+                    ,{ fixed: 'right',             title: '操作',    width: 180,  align:'center', toolbar: '#tableBarID' }
+                ]]
+            });
+
+            /** 上月  **/
+            table.render({
+                elem: '#lastMonthID'
+                // ,height: 520
+                ,id: 'tableOne'
+                ,url: '/employee/list?month=last' //数据接口
+                ,title: '用户表'
+                ,page: true //开启分页
+                ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                ,cols: [[ //表头
+                    { type:  'checkbox',          fixed: 'left' }
+                    ,{ field: 'WorkerName',        title: '姓名',      }
+                    ,{ field: 'WorkerNo',          title: '工号',       sort: true }
+                    ,{ field: 'Mobile',            title: '手机号码',   sort: true }
+                    ,{ field: 'Sex',               title: '性别',       sort: true}
+                    ,{ field: 'EmployeeType',      title: '聘用形式' }
+                    ,{ field: 'Department',        title: '部门'  }
+                    ,{ field: 'Jobs',              title: '岗位' }
+                    ,{ field: 'GetInDate',         title: '入职日期' }
+                    ,{ field: 'WorkStatus',        title: '在职状态',     templet:  function(d) {
+                            if ( "在职" === d.WorkStatus ) {
+                                return "<span style=\"color: #33CC00;\">在职</span>";
+
+                            }  else {
+                                return "<span style=\"color: #FF0000;\">d.WorkStatus</span>";
+                            }
+                        } }
+                    ,{ field: 'IsRegularEmployee', title: '转正状态' }
+                    ,{ field: 'PayMonth',          title: '发薪月数',  sort: true, totalRow: true }
+                    ,{ fixed: 'right',             title: '操作', width: 180, align:'center', toolbar: '#tableBarID' }
+                ]]
+            });
+
+            /** 历史月  **/
+            table.render({
+                elem: '#historyMonthID'
+                // ,height: 420
+                ,id: 'tableOne'
+                ,url: '/employee/list?month=history' //数据接口
+                ,title: '用户表'
+                ,page: true //开启分页
+                ,toolbar: 'default' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                ,cols: [[ //表头
+                    { type:  'checkbox',           fixed: 'left' }
+                    ,{ field: 'WorkerName',        title: '姓名'}
+                    ,{ field: 'WorkerNo',          title: '工号',    width:100,    sort: true }
+                    ,{ field: 'Mobile',            title: '手机号码',              sort: true }
+                    ,{ field: 'Sex',               title: '性别',                  sort: true }
+                    ,{ field: 'EmployeeType',      title: '聘用形式' }
+                    ,{ field: 'Department',        title: '部门' }
+                    ,{ field: 'Jobs',              title: '岗位' }
+                    ,{ field: 'GetInDate',         title: '入职日期' }
+                    ,{ field: 'WorkStatus',        title: '在职状态',     templet:  function(d) {
+                            if ( "在职" === d.WorkStatus ) {
+                                return "<span style=\"color: #33CC00;\">在职</span>";
+
+                            }  else {
+                                return "<span style=\"color: #FF0000;\">d.WorkStatus</span>";
+                            }
+                        } }
+                    ,{ field: 'IsRegularEmployee', title: '转正状态' }
+                    ,{ field: 'PayMonth',          title: '发薪月数'}
+                    ,{ fixed: 'right',             title: '操作',     width: 180, align:'center', toolbar: '#tableBarID' }
+                ]]
+            });
+
+            //监听提交 表格重载
+            form.on('submit(conditionFilter)', function (data) {
+                console.log(data.field);
+                table.reload('tableOne', {
+                    method: 'get'
+                    , where: {
+                        'EmployeeType':      data.field.employmentMode,
+                        'Department':        data.field.department,
+                        'Condition':         data.field.condition,
+                        'IsRegularEmployee': data.field.state
+                    }
+                    , page: {
+                        curr: 1
+                    }
+                });
+                return false;
+            });
+
+            //分页
+            laypage.render({
+                elem: '#historyMonthID' // 分页容器的id
+                , count: 100       // 总页数
+                , skin: '#1E9FFF'  // 自定义选中色值
+                , theme: '#1E9FFF'
+                , jump: function (obj, first) {
+                    if (!first) {
+                        layer.msg('第' + obj.curr + '页', {offset: 'b'});
+                    }
+                }
+            });
+
+
+            //触发事件
+            var active = {
+                tabAdd: function () {
+                    //新增一个Tab项
+                    element.tabAdd('demo', {
+                        title: '新选项' + (Math.random() * 1000 | 0) //用于演示
+                        , content: '内容' + (Math.random() * 1000 | 0)
+                        , id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+                    })
+                }
+                , tabDelete: function (othis) {
+                    //删除指定Tab项
+                    element.tabDelete('demo', '44'); //删除：“商品管理”
+
+                    othis.addClass('layui-btn-disabled');
+                }
+                , tabChange: function () {
+                    //切换到指定Tab项
+                    element.tabChange('demo', '22'); //切换到：用户管理
+                }
+            };
+
+            $('.site-demo-active').on('click', function () {
+                var othis = $(this), type = othis.data('type');
+                active[type] ? active[type].call(this, othis) : '';
+            });
+
+            //Hash地址的定位
+            var layid = location.hash.replace(/^#test=/, '');
+            element.tabChange('test', layid);
+
+            element.on('tab(test)', function (elem) {
+                location.hash = 'test=' + $(this).attr('lay-id');
+            });
+            //监听头工具栏事件
+            table.on('toolbar(failFilter)', function(obj){
+                var checkStatus = table.checkStatus(obj.config.id)
+                        ,data = checkStatus.data; //获取选中的数据
+                switch(obj.event){
+                    case 'add':
+                        layer.msg('添加');
+                        break;
+                    case 'update':
+                        if(data.length === 0){
+                            layer.msg('请选择一行');
+                        } else if(data.length > 1){
+                            layer.msg('只能同时编辑一个');
+                        } else {
+                            layer.alert('编辑 [id]：'+ checkStatus.data[0].id);
+                        }
+                        break;
+                    case 'delete':
+                        if(data.length === 0){
+                            layer.msg('请选择一行');
+                        } else {
+                            layer.msg('删除');
+                        }
+                        break;
+                };
+            });
+            /** 监听行工具事件 (右侧) **/
+            table.on('tool(tableFilter)', function (obj) {
+                var  data = obj.data                  //  获得当前行数据
+                        , layEvent = obj.event;           //  获得 lay-event 对应的值
+
+                if (layEvent === 'detail') {
+                    layer.alert("<pre>" + JSON.stringify(data, null, 4) + "</pre>", {
+                        title: '员工信息详情'
+                    })
+                } else if (layEvent === 'del') {
+                    layer.confirm('确定删除吗', function (index) {
+                        $.ajax({
+                            url: '/employee/delete?id=' + data.id,
+                            type: 'delete',
+                            success: function (result) {
+                                console.log(data.WorkStatus);
+                                if ("在职" === data.WorkStatus) {
+                                    layer.alert('在职员工无法删除!');
+                                    return;
+                                }
+                                layer.msg('删除成功');
+                                obj.del();
+                                layer.close(index);
+                            },
+                            error: function () {
+                                layer.alert('删除失败, 请重试！');
+                                layer.close(index);
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
+

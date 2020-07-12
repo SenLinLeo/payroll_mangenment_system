@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>个人报表</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css?t=1545041465443" media="all">
+    <script src="/static/layui/layui.js?t=1545041465443"></script>
+
+    <style>
+        body {
+            margin: 10px;
+        }
+        .demo-carousel {
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+        }
+    </style>
+    <div class="layui-inline">
+        <label class="layui-form-label">查询时间：</label>
+        <div class="layui-input-inline">
+            <input type="text" class="layui-input" id="dateRange" placeholder="起始日期  -  结束日期">
+        </div>
+    </div>
+</head>
+
+<body>
+
+
+<table class="layui-hide" id="personalTableID" lay-filter="reportFilter"></table>
+
+<script type="text/html" id="tableBarID">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<!-- 表格的数据填充 -->
+<script>
+
+
+    layui.use(['laydate', 'layer', 'table', 'carousel', 'upload', 'element', 'slider'], function(){
+        var laydate = layui.laydate     //日期
+                ,layer = layui.layer        //弹层
+                ,table = layui.table ;       //表格
+
+        table.render({
+              elem: '#personalTableID'
+            , url: "/personal/list"
+            , title: '用户表'
+            , page: true                    //开启分页
+            , totalRow: true                //开启合计行
+            , toolbar: 'default'
+            , cols: [[
+                { type: 'checkbox',       fixed: 'left' }
+                , { field: 'WorkerNo',   title: '工号' }
+                , { field: 'WorkerName',   title: '姓名' }
+                , { field: 'CalcMonth',   title: '月份' }
+                , { field: 'PayGeneral',   title: '正常工作时间工资' }
+                , { field: 'PayPositionAdd',   title: '岗位工资' }
+                , { field: 'PaySecretAdd',     title: '保密工资' }
+                , { field: 'DaysPrivateLeave', title: '事假天数',  width: 100  }
+                , { field: 'DaysSickLeave',     title: '病假天数' }
+                , { field: 'DaysOvertime',     title: '加班天数' }
+                , { field: 'PayOvertime',     title: '加班费' }
+                , { field: 'PayFoodSubsidy',     title: '加班餐补', sort: true }
+                , { field: 'PayBonus',     title: '绩效奖金', sort: true }
+                //, { field: 'PayOther',     title: '其他', sort: true }
+               // , { field: 'ReduceBeforeTax',     title: '其他扣款', sort: true }
+                , { field: 'SumPayBeforeTax',     title: '应发工资', sort: true }
+                //, { field: 'CompanySocial',     title: '公司社保', sort: true }
+                //, { field: 'PrivateSocial',     title: '代扣社保(个人)', sort: true }
+               // , { field: 'PrivateFund',     title: '代扣公积金(个人)', sort: true }
+               // , { field: 'SumTaxReduce',     title: '累计专项扣除', sort: true }
+                //, { field: 'PayOtherAfterTax',     title: '其他不计税（免税金额）', sort: true }
+                //, { field: 'SumTaxNormal',     title: '个税', sort: true }
+                // , { field: 'SumAfterTaxOther',     title: '税后扣款', sort: true }
+                , { field: 'FactPay',     title: '实发工资', sort: true }
+                , { fixed: 'right',        align: 'center',    toolbar: '#tableBarID' }
+            ]]
+        });
+
+        /** 日期时间范围 **/
+        laydate.render({
+            elem: '#dateRange'
+            , range: true
+            , done: function(value){
+                var   tmpValue = '?startTime=' + value;
+                getUrl = '/person/list'+ tmpValue.replace(/ - /g," 00:00:00&endTime=") + " 00:00:00";
+                table.reload('tableOne', {
+                    method: 'get'
+                    , where: {
+                        'EmployeeType': data.field.employmentMode,
+                        'Department': data.field.department,
+                        'Condition': data.field.condition,
+                        'IsRegularEmployee': data.field.state
+                    }
+                    , page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+
+        /** 监听行工具事件 (右侧) **/
+        table.on('tool(reportFilter)', function (obj) {
+            var data = obj.data                  //  获得当前行数据
+                    , layEvent = obj.event;           //  获得 lay-event 对应的值
+
+            if (layEvent === 'detail') {
+                layer.alert("<pre>" + JSON.stringify(data, null, 4) + "</pre>", {
+                    title: '员工信息详情'
+                })
+            } else if (layEvent === 'del') {
+                layer.confirm('确定删除吗', function (index) {
+                    $.ajax({
+                        url: '/personal/delete?id=' + data.id,
+                        type: 'delete',
+                        success: function (result) {
+                            console.log(data.WorkStatus);
+                            if ("在职" === data.WorkStatus) {
+                                layer.alert('在职员工无法删除!');
+                                return;
+                            }
+                            layer.msg('删除成功');
+                            obj.del();
+                            layer.close(index);
+                        },
+                        error: function () {
+                            layer.alert('删除失败, 请重试！');
+                            layer.close(index);
+                        }
+                    });
+                });
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>
