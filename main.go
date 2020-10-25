@@ -2,10 +2,10 @@ package main
 
 import (
 	"geek-nebula/models"
+	_ "geek-nebula/routers"
 	"geek-nebula/utils"
 	"github.com/astaxie/beego"
 	"github.com/patrickmn/go-cache"
-	_ "geek-nebula/routers"
 	"time"
 )
 

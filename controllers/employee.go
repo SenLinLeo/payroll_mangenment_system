@@ -34,6 +34,7 @@ func (self *EmployeeController) Index() {
 	self.Data["LeaveJob"] = showList.LeaveJob
 	self.Data["OnTheJob"] = showList.OnTheJob
 	self.TplName = "employee/index.html"
+	fmt.Println("#########################")
 	self.display()
 }
 
